@@ -57,7 +57,16 @@ public class Game {
 
         game.initializeProperties();
         game.initializePlayers();
-
         game.definePlayersOrder();
+
+        for (int i = 0; i < game.maxPlayers; i++) {
+            Player player = game.players[i];
+            System.out.printf("Player " + player.getId() + " at " + player.getBoardPosition());
+
+            player.setDiceValue(rollTheDice());
+            player.move();
+
+            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + player.getBoardPosition() + "\n");
+        }
     }
 }
