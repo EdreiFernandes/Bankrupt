@@ -2,25 +2,31 @@ package config;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameConfig {
-    String filePath = "./src/config/gameConfig.txt";
+    private static String filePath = "./src/config/gameConfig.txt";
 
-    public void reader() {
-        try {
-            FileReader arquive = new FileReader(filePath);
-            BufferedReader reader = new BufferedReader(arquive);
+    private GameConfig() {
+    }
 
-            String line = reader.readLine();
+    public static List<String> reader() throws Exception {
+        List<String> propertiesInfo = new ArrayList<>();
 
-            while (line != null) {
-                System.out.println(line);
-                line = reader.readLine();
-            }
+        FileReader arquive = new FileReader(filePath);
+        BufferedReader reader = new BufferedReader(arquive);
 
-            arquive.close();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        String line = reader.readLine();
+
+        while (line != null) {
+            line = line.replaceAll("( )+", "-");
+            propertiesInfo.add(line);
+            line = reader.readLine();
         }
+
+        arquive.close();
+
+        return propertiesInfo;
     }
 }

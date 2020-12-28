@@ -1,12 +1,12 @@
 package bankrupt;
 
 public class Property {
-    private Integer costOfSale;
+    private Integer saleValue;
     private Integer rentValue;
     private Integer owner;
 
-    public Property(Integer _costOfSale, Integer _rentValue) {
-        this.costOfSale = _costOfSale;
+    public Property(Integer _saleValue, Integer _rentValue) {
+        this.saleValue = _saleValue;
         this.rentValue = _rentValue;
     }
 }
