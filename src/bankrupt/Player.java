@@ -9,12 +9,11 @@ public class Player implements Comparable<Player> {
     private Integer coins;
     private Behaviour behaviour;
 
-    public Player(Integer _id) {
+    public Player(Integer _id, Behaviour _behaviour) {
         this.coins = 300;
         this.id = _id;
         this.boardPosition = 0;
-        // Behaviour _behaviour
-        // this.behaviour = _behaviour;
+        this.behaviour = _behaviour;
     }
 
     public boolean move() {

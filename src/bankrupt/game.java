@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import config.Behaviour;
 import config.GameConfig;
 
 public class Game {
@@ -42,7 +43,7 @@ public class Game {
 
     private void initializePlayers() {
         for (int i = 0; i < this.maxPlayers; i++) {
-            this.players[i] = new Player(i + 1);
+            this.players[i] = new Player(i + 1, Behaviour.valueOf(i));
             this.players[i].setDiceValue(rollTheDice());
         }
     }
