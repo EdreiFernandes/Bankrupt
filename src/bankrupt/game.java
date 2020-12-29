@@ -15,9 +15,11 @@ public class Game {
     private Integer roundCoins;
     private Integer round;
     private Integer maxRounds;
+    private boolean hasEnded;
 
     private Game() {
-        this.maxRounds = 10;// 1000;
+        this.hasEnded = false;
+        this.maxRounds = 100;// 1000;
         this.maxPlayers = 4;
         this.roundCoins = 100;
         this.properties = new ArrayList<>();
@@ -53,35 +55,46 @@ public class Game {
     }
 
     private void playARound() {
+        Integer playerPlaying = 4;
         System.out.println("\nRound " + (this.round + 1) + " ------------------------------------");
         for (int i = 0; i < this.maxPlayers; i++) {
             Player player = this.players[i];
-            System.out.printf("\tPlayer " + player.getId() + " at " + player.getBoardPosition());
 
-            player.setDiceValue(rollTheDice());
-            boolean isRoundCompleted = player.move();
-            if (isRoundCompleted) {
-                player.addCoins(this.roundCoins);
-            }
+            if (player.getArePlaying()) {
+                System.out.println("\tPlayer " + player.getId() + "\tCoins: " + player.getCoins());
 
-            // comprar
-            Integer boardPosition = player.getBoardPosition();
-            if (boardPosition > 0) { // se esta no livre
-                Property property = this.properties.get(boardPosition - 1);
-
-                System.out.println("------> " + property.hasOwner());
-
-                if (property.hasOwner()) {
-                    Player receiver = Arrays.asList(this.players).stream()
-                            .filter(x -> x.getId().equals(property.getOwner())).findAny().orElse(null);
-
-                    player.payRent(property, receiver);
-                } else {
-                    player.buyAProperty(property);
+                player.setDiceValue(rollTheDice());
+                boolean isTurnCompleted = player.move();
+                if (isTurnCompleted) {
+                    System.out.println("\t- Player " + player.getId() + " took a complete turn on the board");
+                    player.addCoins(this.roundCoins);
                 }
-            }
 
-            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + boardPosition + "\n");
+                Integer boardPosition = player.getBoardPosition();
+                if (boardPosition > 0) {
+                    Property property = this.properties.get(boardPosition - 1);
+
+                    if (property.hasOwner()) {
+                        Player receiver = Arrays.asList(this.players).stream()
+                                .filter(x -> x.getId().equals(property.getOwner())).findAny().orElse(null);
+
+                        if (receiver.getArePlaying()) {
+                            player.payRent(property, receiver);
+                        } else {
+                            property.setOwner(null);
+                            player.buyAProperty(property);
+                        }
+                    } else {
+                        player.buyAProperty(property);
+                    }
+                }
+            } else {
+                playerPlaying--;
+            }
+        }
+
+        if (playerPlaying <= 1) {
+            this.hasEnded = true;
         }
     }
 
@@ -106,14 +119,23 @@ public class Game {
             game.initializePlayers();
             game.definePlayersOrder();
 
-            while (game.round < game.maxRounds) {
+            while (!game.hasEnded) {
                 game.playARound();
                 game.round++;
+                if (game.round >= game.maxRounds) {
+                    game.hasEnded = true;
+                }
             }
 
-            for (Player player : game.players) {
-                System.out.println("Player " + player.getId() + " coins " + player.getCoins());
-            }
+            System.out.println(game.hasEnded);
+            // if (game.hasEnded) {
+            // System.out.println("GG");
+            // }
+
+            // for (Player player : game.players) {
+            // System.out.println("Player " + player.getId() + " coins " +
+            // player.getCoins());
+            // }
 
             simulation++;
         }

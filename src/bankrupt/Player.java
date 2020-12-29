@@ -10,12 +10,14 @@ public class Player implements Comparable<Player> {
     private Integer boardPosition;
     private Integer coins;
     private Behaviour behaviour;
+    private boolean arePlaying;
 
     public Player(Integer _id, Behaviour _behaviour) {
         this.coins = 300;
         this.id = _id;
         this.boardPosition = 0;
         this.behaviour = _behaviour;
+        this.arePlaying = true;
     }
 
     public boolean move() {
@@ -37,10 +39,13 @@ public class Player implements Comparable<Player> {
     }
 
     public void payRent(Property _property, Player _receiver) {
+        if (this.id == _receiver.getId()) {
+            return;
+        }
         decreaseCoins(_property.getRentValue());
         _receiver.addCoins(_property.getRentValue());
         System.out.println(
-                "\t\tPlayer " + this.id + " paying " + _property.getRentValue() + " to Player " + _receiver.getId());
+                "\t- Player " + this.id + " paying " + _property.getRentValue() + " to Player " + _receiver.getId());
     }
 
     public void buyAProperty(Property _property) {
@@ -51,19 +56,15 @@ public class Player implements Comparable<Player> {
             boolean willBuy = false;
             switch (this.behaviour) {
                 case IMPULSIVO:
-                    System.out.println("\t\tIMPULSIVO");
                     willBuy = true;
                     break;
                 case EXIGENTE:
-                    System.out.println("\t\tEXIGENTE");
                     willBuy = _property.getRentValue() > 50;
                     break;
                 case CAUTELOSO:
-                    System.out.println("\t\tCAUTELOSO");
                     willBuy = this.coins - _property.getSaleValue() >= 80;
                     break;
                 case ALEATORIO:
-                    System.out.println("\t\tALEATORIO");
                     willBuy = new Random().nextBoolean();
                     break;
             }
@@ -71,21 +72,16 @@ public class Player implements Comparable<Player> {
             if (willBuy) {
                 decreaseCoins(_property.getSaleValue());
                 _property.setOwner(this.id);
-                System.out.println("\t\tComprou");
-            } else {
-                System.out.println("\t\tNão comprou");
             }
         }
     }
 
     private void decreaseCoins(Integer _coins) {
         this.coins -= _coins;
-        // if (this.coins < 0) {
-        // System.out.println("\t\t\t\t player" + this.id + " faliu");
-        // return false;
-        // }
-        // System.out.println("\t\t\t\t player" + this.id + " coins: " + this.coins);
-        // return true;
+        if (this.coins < 0) {
+            System.out.println("\t- Player " + this.id + " broke");
+            this.arePlaying = false;
+        }
     }
 
     public int compareTo(Player comparePlayer) {
@@ -103,6 +99,10 @@ public class Player implements Comparable<Player> {
 
     public Integer getBoardPosition() {
         return boardPosition;
+    }
+
+    public boolean getArePlaying() {
+        return arePlaying;
     }
 
     public void setDiceValue(Integer diceValue) {
