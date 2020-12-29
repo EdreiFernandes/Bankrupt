@@ -72,7 +72,10 @@ public class Game {
                 System.out.println("------> " + property.hasOwner());
 
                 if (property.hasOwner()) {
-                    payRent(player, property);
+                    Player receiver = Arrays.asList(this.players).stream()
+                            .filter(x -> x.getId().equals(property.getOwner())).findAny().orElse(null);
+
+                    player.payRent(property, receiver);
                 } else {
                     player.buyAProperty(property);
                 }
@@ -80,16 +83,6 @@ public class Game {
 
             System.out.printf(" rolls " + player.getDiceValue() + " and go to " + boardPosition + "\n");
         }
-    }
-
-    private void payRent(Player tenant, Property property) {
-        Player receiver = Arrays.asList(this.players).stream().filter(x -> x.getId().equals(property.getOwner()))
-                .findAny().orElse(null);
-        Integer rentValue = property.getRentValue();
-
-        tenant.decreaseCoins(rentValue);
-        receiver.addCoins(rentValue);
-        System.out.println("\t\tPlayer " + tenant.getId() + " paying " + rentValue + " to Player " + receiver.getId());
     }
 
     private static Integer rollTheDice() {
@@ -117,6 +110,11 @@ public class Game {
                 game.playARound();
                 game.round++;
             }
+
+            for (Player player : game.players) {
+                System.out.println("Player " + player.getId() + " coins " + player.getCoins());
+            }
+
             simulation++;
         }
     }
