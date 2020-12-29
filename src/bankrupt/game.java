@@ -127,16 +127,6 @@ public class Game {
                 }
             }
 
-            System.out.println(game.hasEnded);
-            // if (game.hasEnded) {
-            // System.out.println("GG");
-            // }
-
-            // for (Player player : game.players) {
-            // System.out.println("Player " + player.getId() + " coins " +
-            // player.getCoins());
-            // }
-
             simulation++;
         }
     }

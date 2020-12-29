@@ -42,10 +42,17 @@ public class Player implements Comparable<Player> {
         if (this.id == _receiver.getId()) {
             return;
         }
-        decreaseCoins(_property.getRentValue());
-        _receiver.addCoins(_property.getRentValue());
-        System.out.println(
-                "\t- Player " + this.id + " paying " + _property.getRentValue() + " to Player " + _receiver.getId());
+
+        Integer rentValue = _property.getRentValue();
+        if (this.coins - rentValue < 0) {
+            rentValue = this.coins;
+            System.out.println("\t- Player " + this.id + " broke");
+            this.arePlaying = false;
+        }
+
+        decreaseCoins(rentValue);
+        _receiver.addCoins(rentValue);
+        System.out.println("\t- Player " + this.id + " paying " + rentValue + " to Player " + _receiver.getId());
     }
 
     public void buyAProperty(Property _property) {
@@ -78,10 +85,6 @@ public class Player implements Comparable<Player> {
 
     private void decreaseCoins(Integer _coins) {
         this.coins -= _coins;
-        if (this.coins < 0) {
-            System.out.println("\t- Player " + this.id + " broke");
-            this.arePlaying = false;
-        }
     }
 
     public int compareTo(Player comparePlayer) {
