@@ -98,8 +98,21 @@ public class Game {
         return dice.nextInt(6) + 1;
     }
 
+    private Player defineWinner() {
+        Player winner = this.players[0];
+
+        for (int i = 0; i < this.maxPlayers; i++) {
+            Player player = this.players[i];
+            if (player.getArePlaying() && winner.getCoins() < player.getCoins()) {
+                winner = player;
+            }
+        }
+        return winner;
+    }
+
     public static void main(String[] args) {
         Game game = new Game();
+        SimStatistic statistic = new SimStatistic();
 
         Integer simulation = 0;
         Integer maxSimulations = 300;
@@ -119,9 +132,15 @@ public class Game {
                 }
             }
 
+            statistic.addToListRoundsPerGame(game.round);
+            statistic.addToListWinnerBehavior(game.defineWinner().getBehaviour());
             simulation++;
         }
 
-        System.out.println("Finaly");
+        System.out.println("Quantas partidas terminam por time out (1000 rodadas)?");
+        System.out.println(statistic.roundsEndedInTimeOut());
+
+        System.out.println("Quantos turnos (rodadas), em média, demora uma partida?");
+        System.out.println(statistic.averageRoundsPerGame());
     }
 }

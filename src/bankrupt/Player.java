@@ -106,6 +106,10 @@ public class Player implements Comparable<Player> {
         return arePlaying;
     }
 
+    public Behavior getBehaviour() {
+        return behaviour;
+    }
+
     public void setDiceValue(Integer diceValue) {
         this.diceValue = diceValue;
     }
