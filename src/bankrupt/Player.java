@@ -1,5 +1,7 @@
 package bankrupt;
 
+import java.util.Random;
+
 import config.Behaviour;
 
 public class Player implements Comparable<Player> {
@@ -31,22 +33,47 @@ public class Player implements Comparable<Player> {
     }
 
     public void buyAProperty(Property _property) {
-        boolean hasBought = decreaseCoins(_property.getSaleValue());
-        if (hasBought) {
-            _property.setOwner(this.id);
-            System.out.println("\t\tComprou");
-        } else {
-            System.out.println("\t\tSem dindin");
+        boolean canBuy;
+        canBuy = this.coins - _property.getSaleValue() > 0;
+
+        if (canBuy) {
+            boolean willBuy = false;
+            switch (this.behaviour) {
+                case IMPULSIVO:
+                    System.out.println("\t\tIMPULSIVO");
+                    willBuy = true;
+                    break;
+                case EXIGENTE:
+                    System.out.println("\t\tEXIGENTE");
+                    willBuy = _property.getRentValue() > 50;
+                    break;
+                case CAUTELOSO:
+                    System.out.println("\t\tCAUTELOSO");
+                    willBuy = this.coins - _property.getSaleValue() >= 80;
+                    break;
+                case ALEATORIO:
+                    System.out.println("\t\tALEATORIO");
+                    willBuy = new Random().nextBoolean();
+                    break;
+            }
+
+            if (willBuy) {
+                decreaseCoins(_property.getSaleValue());
+                _property.setOwner(this.id);
+                System.out.println("\t\tComprou");
+            } else {
+                System.out.println("\t\tNão comprou");
+            }
         }
     }
 
     public boolean decreaseCoins(Integer _coins) {
         this.coins -= _coins;
-        if (this.coins < 0) {
-            System.out.println("\t\t\t\t player" + this.id + " faliu");
-            return false;
-        }
-        System.out.println("\t\t\t\t player" + this.id + " coins: " + this.coins);
+        // if (this.coins < 0) {
+        // System.out.println("\t\t\t\t player" + this.id + " faliu");
+        // return false;
+        // }
+        // System.out.println("\t\t\t\t player" + this.id + " coins: " + this.coins);
         return true;
     }
 
