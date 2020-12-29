@@ -16,7 +16,7 @@ public class Game {
     private Integer maxRounds;
 
     private Game() {
-        this.maxRounds = 1000;
+        this.maxRounds = 10;// 1000;
         this.maxPlayers = 4;
         this.roundCoins = 100;
         this.properties = new ArrayList<>();
@@ -63,8 +63,34 @@ public class Game {
                 player.addCoins(this.roundCoins);
             }
 
-            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + player.getBoardPosition() + "\n");
+            // comprar
+            Integer boardPosition = player.getBoardPosition();
+            if (boardPosition > 0) { // se esta no livre
+                Property property = this.properties.get(boardPosition - 1);
+
+                System.out.println("------> " + property.hasOwner());
+
+                if (property.hasOwner()) {
+                    payRent(player, property);
+                } else {
+                    player.decreaseCoins(property.getSaleValue());
+                    property.setOwner(player.getId());
+                    System.out.println("\t\tComprar prop");
+                }
+            }
+
+            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + boardPosition + "\n");
         }
+    }
+
+    private void payRent(Player tenant, Property property) {
+        Player receiver = Arrays.asList(this.players).stream().filter(x -> x.getId().equals(property.getOwner()))
+                .findAny().orElse(null);
+        Integer rentValue = property.getRentValue();
+
+        tenant.decreaseCoins(rentValue);
+        receiver.addCoins(rentValue);
+        System.out.println("\t\tPlayer " + tenant.getId() + " paying " + rentValue + " to Player " + receiver.getId());
     }
 
     private static Integer rollTheDice() {
@@ -77,7 +103,9 @@ public class Game {
 
         // Simulations
         Integer simulation = 0;
-        while (simulation < 300) {
+        Integer maxSimulations = 1;// 300;
+
+        while (simulation < maxSimulations) {
             // Game
             System.out.println("\n------------ BANKRUPT Simulation " + (simulation + 1) + " ------------");
 

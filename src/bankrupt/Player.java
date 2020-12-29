@@ -20,8 +20,8 @@ public class Player implements Comparable<Player> {
     public boolean move() {
         this.boardPosition += diceValue;
 
-        if (this.boardPosition >= 20) {
-            this.boardPosition -= 20;
+        if (this.boardPosition > 20) {
+            this.boardPosition -= 21;
             return true;
         }
         return false;
