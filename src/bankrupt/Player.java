@@ -2,17 +2,17 @@ package bankrupt;
 
 import java.util.Random;
 
-import config.Behaviour;
+import config.Behavior;
 
 public class Player implements Comparable<Player> {
     private Integer id;
     private Integer diceValue;
     private Integer boardPosition;
     private Integer coins;
-    private Behaviour behaviour;
+    private Behavior behaviour;
     private boolean arePlaying;
 
-    public Player(Integer _id, Behaviour _behaviour) {
+    public Player(Integer _id, Behavior _behaviour) {
         this.coins = 300;
         this.id = _id;
         this.boardPosition = 0;
@@ -46,13 +46,11 @@ public class Player implements Comparable<Player> {
         Integer rentValue = _property.getRentValue();
         if (this.coins - rentValue < 0) {
             rentValue = this.coins;
-            System.out.println("\t- Player " + this.id + " broke");
             this.arePlaying = false;
         }
 
         decreaseCoins(rentValue);
         _receiver.addCoins(rentValue);
-        System.out.println("\t- Player " + this.id + " paying " + rentValue + " to Player " + _receiver.getId());
     }
 
     public void buyAProperty(Property _property) {

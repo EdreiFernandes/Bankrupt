@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import config.Behaviour;
+import config.Behavior;
 import config.GameConfig;
 
 public class Game {
@@ -18,8 +18,7 @@ public class Game {
     private boolean hasEnded;
 
     private Game() {
-        this.hasEnded = false;
-        this.maxRounds = 100;// 1000;
+        this.maxRounds = 1000;
         this.maxPlayers = 4;
         this.roundCoins = 100;
         this.properties = new ArrayList<>();
@@ -45,7 +44,7 @@ public class Game {
 
     private void initializePlayers() {
         for (int i = 0; i < this.maxPlayers; i++) {
-            this.players[i] = new Player(i + 1, Behaviour.valueOf(i));
+            this.players[i] = new Player(i + 1, Behavior.valueOf(i));
             this.players[i].setDiceValue(rollTheDice());
         }
     }
@@ -56,17 +55,13 @@ public class Game {
 
     private void playARound() {
         Integer playerPlaying = 4;
-        System.out.println("\nRound " + (this.round + 1) + " ------------------------------------");
         for (int i = 0; i < this.maxPlayers; i++) {
             Player player = this.players[i];
 
             if (player.getArePlaying()) {
-                System.out.println("\tPlayer " + player.getId() + "\tCoins: " + player.getCoins());
-
                 player.setDiceValue(rollTheDice());
                 boolean isTurnCompleted = player.move();
                 if (isTurnCompleted) {
-                    System.out.println("\t- Player " + player.getId() + " took a complete turn on the board");
                     player.addCoins(this.roundCoins);
                 }
 
@@ -106,15 +101,12 @@ public class Game {
     public static void main(String[] args) {
         Game game = new Game();
 
-        // Simulations
         Integer simulation = 0;
-        Integer maxSimulations = 1;// 300;
+        Integer maxSimulations = 300;
 
         while (simulation < maxSimulations) {
-            // Game
-            System.out.println("\n------------ BANKRUPT Simulation " + (simulation + 1) + " ------------");
-
             game.round = 0;
+            game.hasEnded = false;
             game.initializeProperties();
             game.initializePlayers();
             game.definePlayersOrder();
@@ -129,5 +121,7 @@ public class Game {
 
             simulation++;
         }
+
+        System.out.println("Finaly");
     }
 }
