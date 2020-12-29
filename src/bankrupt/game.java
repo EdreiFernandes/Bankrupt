@@ -73,9 +73,7 @@ public class Game {
                 if (property.hasOwner()) {
                     payRent(player, property);
                 } else {
-                    player.decreaseCoins(property.getSaleValue());
-                    property.setOwner(player.getId());
-                    System.out.println("\t\tComprar prop");
+                    player.buyAProperty(property);
                 }
             }
 

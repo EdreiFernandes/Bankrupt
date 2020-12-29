@@ -31,8 +31,24 @@ public class Player implements Comparable<Player> {
         this.coins += _coins;
     }
 
-    public void decreaseCoins(Integer _coins) {
+    public void buyAProperty(Property _property) {
+        boolean hasBought = decreaseCoins(_property.getSaleValue());
+        if (hasBought) {
+            _property.setOwner(this.id);
+            System.out.println("\t\tComprou");
+        } else {
+            System.out.println("\t\tSem dindin");
+        }
+    }
+
+    public boolean decreaseCoins(Integer _coins) {
         this.coins -= _coins;
+        if (this.coins < 0) {
+            System.out.println("\t\t\t\t player" + this.id + " faliu");
+            return false;
+        }
+        System.out.println("\t\t\t\t player" + this.id + " coins: " + this.coins);
+        return true;
     }
 
     public int compareTo(Player comparePlayer) {
