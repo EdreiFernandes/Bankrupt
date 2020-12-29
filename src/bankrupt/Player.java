@@ -6,20 +6,33 @@ public class Player implements Comparable<Player> {
     private Integer id;
     private Integer diceValue;
     private Integer boardPosition;
+    private Integer coins;
     private Behaviour behaviour;
 
     public Player(Integer _id) {
+        this.coins = 300;
         this.id = _id;
         this.boardPosition = 0;
         // Behaviour _behaviour
         // this.behaviour = _behaviour;
     }
 
-    public void move() {
+    public boolean move() {
         this.boardPosition += diceValue;
-        if (boardPosition >= 20) {
-            boardPosition -= 20;
+
+        if (this.boardPosition >= 20) {
+            this.boardPosition -= 20;
+            return true;
         }
+        return false;
+    }
+
+    public void addCoins(Integer _coins) {
+        this.coins += _coins;
+    }
+
+    public void decreaseCoins(Integer _coins) {
+        this.coins -= _coins;
     }
 
     public int compareTo(Player comparePlayer) {

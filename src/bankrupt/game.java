@@ -11,9 +11,14 @@ public class Game {
     private Integer maxPlayers;
     private Player[] players;
     private List<Property> properties;
+    private Integer roundCoins;
+    private Integer round;
+    private Integer maxRounds;
 
     private Game() {
+        this.maxRounds = 1000;
         this.maxPlayers = 4;
+        this.roundCoins = 100;
         this.properties = new ArrayList<>();
         this.players = new Player[this.maxPlayers];
     }
@@ -46,27 +51,46 @@ public class Game {
         Arrays.sort(this.players);
     }
 
+    private void playARound() {
+        System.out.println("\nRound " + (this.round + 1) + " ------------------------------------");
+        for (int i = 0; i < this.maxPlayers; i++) {
+            Player player = this.players[i];
+            System.out.printf("\tPlayer " + player.getId() + " at " + player.getBoardPosition());
+
+            player.setDiceValue(rollTheDice());
+            boolean isRoundCompleted = player.move();
+            if (isRoundCompleted) {
+                player.addCoins(this.roundCoins);
+            }
+
+            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + player.getBoardPosition() + "\n");
+        }
+    }
+
     private static Integer rollTheDice() {
         Random dice = new Random();
         return dice.nextInt(6) + 1;
     }
 
     public static void main(String[] args) {
-        System.out.println("Bankrupt");
         Game game = new Game();
 
-        game.initializeProperties();
-        game.initializePlayers();
-        game.definePlayersOrder();
+        // Simulations
+        Integer simulation = 0;
+        while (simulation < 300) {
+            // Game
+            System.out.println("\n------------ BANKRUPT Simulation " + (simulation + 1) + " ------------");
 
-        for (int i = 0; i < game.maxPlayers; i++) {
-            Player player = game.players[i];
-            System.out.printf("Player " + player.getId() + " at " + player.getBoardPosition());
+            game.round = 0;
+            game.initializeProperties();
+            game.initializePlayers();
+            game.definePlayersOrder();
 
-            player.setDiceValue(rollTheDice());
-            player.move();
-
-            System.out.printf(" rolls " + player.getDiceValue() + " and go to " + player.getBoardPosition() + "\n");
+            while (game.round < game.maxRounds) {
+                game.playARound();
+                game.round++;
+            }
+            simulation++;
         }
     }
 }
