@@ -9,7 +9,6 @@ import config.Behavior;
 public class SimStatistic {
     private List<Integer> listRoundsPerGame;
     private List<Behavior> listWinnerBehavior;
-    private Behavior winningBehavior;
 
     public SimStatistic() {
         this.listRoundsPerGame = new ArrayList<>();
@@ -24,10 +23,6 @@ public class SimStatistic {
         this.listWinnerBehavior.add(_winnerBehavior);
     }
 
-    public void showWinnerBehavior() {
-        System.out.println(this.listWinnerBehavior.toString());
-    }
-
     public Integer roundsEndedInTimeOut() {
         Integer frequency = Collections.frequency(this.listRoundsPerGame, 1000);
         return frequency;
@@ -40,5 +35,35 @@ public class SimStatistic {
         }
 
         return sum / this.listRoundsPerGame.size();
+    }
+
+    public void winningBehaviorPerCent() {
+        for (int i = 0; i < 4; i++) {
+            Behavior behavior = Behavior.valueOf(i);
+            Integer frequency = Collections.frequency(this.listWinnerBehavior, behavior);
+            Integer perCent = frequency / 3;
+            System.out.println(behavior.name() + ":\t" + perCent + "%");
+        }
+    }
+
+    public Behavior mostWinnerBehavior() {
+        Behavior winningBehavior = null;
+        Integer winnerPerCent = 0;
+
+        for (int i = 0; i < 4; i++) {
+            Behavior behavior = Behavior.valueOf(i);
+            Integer frequency = Collections.frequency(this.listWinnerBehavior, behavior);
+            Integer perCent = frequency / 3;
+
+            if (winnerPerCent < perCent) {
+                winningBehavior = behavior;
+                winnerPerCent = perCent;
+                if (winnerPerCent > 50) {
+                    break;
+                }
+            }
+        }
+
+        return winningBehavior;
     }
 }

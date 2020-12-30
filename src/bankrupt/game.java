@@ -142,5 +142,11 @@ public class Game {
 
         System.out.println("Quantos turnos (rodadas), em média, demora uma partida?");
         System.out.println(statistic.averageRoundsPerGame());
+
+        System.out.println("Qual a porcentagem de vitórias por comportamento dos jogadores?");
+        statistic.winningBehaviorPerCent();
+
+        System.out.println("Qual o comportamento que mais vence?");
+        System.out.println(statistic.mostWinnerBehavior().name());
     }
 }
